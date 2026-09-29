@@ -86,7 +86,7 @@ The frontend is responsible for:
 - Responsive design
 
 ## Backend
-```
+
 The backend is responsible for:
 
 - Server-side processing
@@ -95,7 +95,7 @@ The backend is responsible for:
 - Data processing
 - Future Zoho People API integration
 - Secure communication between frontend and external APIs
-```
+
 ## Zoho People
 
 Zoho People will act as the primary HR/leave data source.
