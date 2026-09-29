@@ -175,3 +175,18 @@ app/
 │
 └── widget.html
 ```
+### widget.html
+
+This is the main HTML entry point for the application.
+
+It provides the basic structure of the Leave Management System UI.
+
+Responsibilities include:
+
+- Application container
+- Navigation
+- Page sections
+- UI structure
+- Loading JavaScript files
+- Loading CSS
+- Connecting frontend modules
