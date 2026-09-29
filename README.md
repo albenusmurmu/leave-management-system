@@ -66,3 +66,47 @@ The project follows a frontend + backend architecture.
                         Zoho People
                               |
                     Employee Leave Data
+
+```
+
+## Frontend
+
+The frontend is responsible for:
+
+- User interface
+- Navigation
+- Leave summary
+- Leave request screens
+- Forms
+- Cards
+- Tables
+- Buttons
+- Filters
+- User interactions
+- Responsive design
+
+## Backend
+```
+The backend is responsible for:
+
+- Server-side processing
+- API communication
+- Authentication/authorization handling
+- Data processing
+- Future Zoho People API integration
+- Secure communication between frontend and external APIs
+```
+## Zoho People
+
+Zoho People will act as the primary HR/leave data source.
+
+The future implementation will use Zoho People APIs to retrieve and update:
+
+- Employee information
+- Leave balances
+- Leave requests
+- Leave types
+- Leave status
+- Holidays
+- Team information
+- Approval information
