@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Leave Tracker</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <header class="topbar">
+    <button class="topbar__link is-active">My Data</button>
+    <button class="topbar__link">Team</button>
+    <button class="topbar__link">Holidays</button>
+  </header>
+
+  <nav class="subtabs" id="subtabs">
+    <button class="subtabs__tab is-active" data-tab="summary">Leave Summary</button>
+    <button class="subtabs__tab" data-tab="requests">Leave Requests</button>
+    <button class="subtabs__tab" data-tab="compoff">Compensatory Request</button>
+  </nav>
+
+  <main class="content">
+
+    <section class="tab-panel is-active" id="tab-summary">
+
+      <div class="summary-bar">
+        <div class="summary-bar__info">
+          Leave booked this year : <b id="leaveBooked">0</b>
+          <span class="divider">|</span>
+          Absent : <b id="absentDays">0 day(s)</b>
+        </div>
+
+        <div class="year-nav">
+          <div class="year-nav__buttons">
+            <button class="icon-btn" id="prevYear" title="Previous year">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#1a73e8" stroke-width="3"><path d="M15 5l-7 7 7 7"/></svg>
+            </button>
+            <button class="icon-btn" title="Calendar">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#666" stroke-width="2"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/></svg>
+            </button>
+            <button class="icon-btn" id="nextYear" title="Next year">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#1a73e8" stroke-width="3"><path d="M9 5l7 7-7 7"/></svg>
+            </button>
+          </div>
+          <span class="year-nav__range" id="dateRange"></span>
+        </div>
+
+        <div class="summary-bar__actions">
+          <button class="view-btn is-active" title="List view">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#1a73e8" stroke-width="2"><rect x="4" y="4" width="16" height="4" rx="1"/><rect x="4" y="10" width="16" height="4" rx="1"/><rect x="4" y="16" width="16" height="4" rx="1"/></svg>
+          </button>
+          <button class="view-btn" title="Calendar view">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#666" stroke-width="2"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/></svg>
+          </button>
+          <button class="btn-primary">Apply Leave</button>
+          <button class="btn-more" title="More">•••</button>
+        </div>
+      </div>
+
+      <!-- TEMPORARY scroll test, removed in Step 3 -->
+      <div class="temp-box">Scroll test. The bar above must stay visible.</div>
+
+    </section>
+
+    <section class="tab-panel" id="tab-requests">Leave Requests content</section>
+    <section class="tab-panel" id="tab-compoff">Compensatory Request content</section>
+  </main>
+
+  <script src="js/data.js"></script>
+  <script src="js/pages/leaveSummary.js"></script>
+  <script src="js/main.js"></script>
+</body>
+</html>
