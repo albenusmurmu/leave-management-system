@@ -110,3 +110,68 @@ The future implementation will use Zoho People APIs to retrieve and update:
 - Holidays
 - Team information
 - Approval information
+
+## 📂 Project Structure
+
+Current project structure:
+
+```
+Leave Management System/
+│
+├── app/
+│   │
+│   ├── css/
+│   │   └── style.css
+│   │
+│   ├── js/
+│   │   ├── data.js
+│   │   ├── main.js
+│   │   │
+│   │   └── pages/
+│   │       ├── compensatoryRequest.js
+│   │       ├── leaveRequests.js
+│   │       └── leaveSummary.js
+│   │
+│   ├── translations/
+│   │   └── en.json
+│   │
+│   └── widget.html
+│
+├── server/
+│   └── index.js
+│
+├── node_modules/
+│
+├── package.json
+├── package-lock.json
+├── plugin-manifest.json
+├── .gitignore
+├── README.md
+│
+└── certificate/private files
+```
+
+## 🎨 Frontend Structure
+
+The frontend is located inside the app directory.
+
+```
+app/
+│
+├── css/
+│   └── style.css
+│
+├── js/
+│   ├── data.js
+│   ├── main.js
+│   │
+│   └── pages/
+│       ├── leaveSummary.js
+│       ├── leaveRequests.js
+│       └── compensatoryRequest.js
+│
+├── translations/
+│   └── en.json
+│
+└── widget.html
+```
