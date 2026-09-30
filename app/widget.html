@@ -24,6 +24,7 @@
 
     <section class="tab-panel is-active" id="tab-summary">
 
+      <!-- STICKY BAR -->
       <div class="summary-bar">
         <div class="summary-bar__info">
           Leave booked this year : <b id="leaveBooked">0</b>
@@ -58,8 +59,19 @@
         </div>
       </div>
 
-      <!-- TEMPORARY scroll test, removed in Step 3 -->
-      <div class="temp-box">Scroll test. The bar above must stay visible.</div>
+      <!-- LEAVE CARDS -->
+      <div class="cards" id="cards"></div>
+
+      <!-- ABSENT LIST -->
+      <div class="panel">
+        <div class="panel__head">
+          <b>Absent</b><span class="dot"></span><span id="absentTitle" class="muted"></span>
+        </div>
+        <div class="absent-rows" id="absentRows"></div>
+      </div>
+
+      <!-- TEMPORARY scroll test, removed in Step 5 -->
+      <div class="temp-box">Scroll test</div>
 
     </section>
 
