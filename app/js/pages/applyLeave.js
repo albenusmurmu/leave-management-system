@@ -8,12 +8,15 @@ const applyLeave = {
       from: $("fFrom"), to: $("fTo"),
       fromPicker: $("fFromPicker"), toPicker: $("fToPicker"),
       email: $("fEmail"), reason: $("fReason"),
-      errType: $("errType"), errDate: $("errDate"), errEmail: $("errEmail")
+      errType: $("errType"), errDate: $("errDate"), errEmail: $("errEmail"),
+      badge: $("leaveBadge"), title: $("leaveTitle"),
+      chip: $("balanceChip"), days: $("daysChip")
     };
 
     $("applyClose").addEventListener("click", () => this.close());
     $("applyCancel").addEventListener("click", () => this.close());
     $("applySubmit").addEventListener("click", () => this.submit());
+    this.els.type.addEventListener("change", () => this.updateType());
     document.addEventListener("keydown", (e) => { if (e.key === "Escape") this.close(); });
 
     // calendar icons and inputs open the native date picker
