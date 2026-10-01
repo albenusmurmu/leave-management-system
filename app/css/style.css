@@ -6,7 +6,7 @@ body {
   font-family: "Zoho Puvi", "Segoe UI", Arial, sans-serif;
   font-size: 15px;
   color: #222;
-  background: #f1f3f8;
+  background: #f4f6fb;
   display: flex;
   flex-direction: column;
   overflow: hidden;
@@ -68,7 +68,7 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
   align-items: center;
   justify-content: space-between;
   padding: 18px 0;
-  background: #f1f3f8;
+  background: #f4f6fb;
 }
 .summary-bar__info { color: #666; }
 .summary-bar__info b { color: #222; font-weight: 500; }
@@ -113,39 +113,7 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
   font-size: 10px;
 }
 
-/* ===== Leave cards ===== */
-.cards { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 20px; }
-
-.leave-card {
-  width: 242px;
-  padding: 24px 24px 16px;
-  background: #fff;
-  border: 1px solid #e5e7ee;
-  border-radius: 6px;
-  cursor: pointer;
-  transition: box-shadow .2s;
-}
-.leave-card:hover { box-shadow: 0 3px 10px rgba(0, 0, 0, .12); }
-
-.leave-card__title { text-align: center; font-size: 16px; }
-.leave-card__icon {
-  width: 54px;
-  height: 54px;
-  margin: 20px auto 16px;
-  border-radius: 8px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-.leave-card__rows { border-top: 1px solid #eee; padding-top: 14px; }
-.leave-card__row { display: flex; align-items: center; height: 35px; }
-.leave-card__row span { flex: 1; }
-.leave-card__row b { font-weight: 400; min-width: 28px; text-align: right; }
-.leave-card__row b.is-green { color: #12b76a; }
-.leave-card__info { width: 22px; margin-left: 6px; display: flex; }
-.leave-card__row:first-child .leave-card__info { visibility: hidden; }
-
-/* ===== Panels (white cards holding lists) ===== */
+/* ===== Panels ===== */
 .panel {
   background: #fff;
   border: 1px solid #e5e7ee;
@@ -190,16 +158,6 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
   border: 1px solid #1a73e8;
   border-radius: 4px;
 }
-.btn-outline:hover { background: #eef5fe; }
-
-/* TEMPORARY, removed in Step 5 */
-/* .temp-box {
-  height: 700px;
-  background: #fff;
-  border-radius: 6px;
-  padding: 20px;
-} */
-
 
 /* ===== Holidays panel ===== */
 .panel__filter { padding: 24px; border-bottom: 1px solid #eee; }
@@ -226,6 +184,160 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
 .holiday-row__name { gap: 12px; border-left: 1px solid #eee; border-right: 1px solid #eee; }
 
 
+/* ================= MODERN THEME ================= */
+body {
+  background:
+    radial-gradient(1100px 480px at 8% -10%, #e3edff 0%, transparent 60%),
+    radial-gradient(900px 420px at 100% 0%, #efe8ff 0%, transparent 55%),
+    #f4f6fb;
+  background-attachment: fixed;
+}
+
+/* keep content centred on very wide / zoomed-out screens */
+.content { padding: 0 clamp(12px, 2vw, 32px) 28px; }
+.tab-panel { max-width: 1680px; margin: 0 auto; }
+
+/* top bar + tabs */
+.topbar { background: linear-gradient(90deg, #26346a 0%, #3d52a0 100%); }
+.topbar__link { opacity: .75; transition: opacity .2s; }
+.topbar__link:hover, .topbar__link.is-active { opacity: 1; }
+.subtabs { border-bottom: none; box-shadow: 0 2px 8px rgba(30, 50, 100, .06); }
+.subtabs__tab { color: #5b6275; border-radius: 8px 8px 0 0; transition: color .2s, background .2s; }
+.subtabs__tab:hover { color: #1a73e8; background: #f3f7fe; }
+.subtabs__tab.is-active { color: #1a1f36; }
+
+/* sticky bar: frosted glass */
+.summary-bar {
+  background: rgba(244, 246, 251, .82);
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
+}
+.year-nav__buttons, .view-btn, .btn-more {
+  border-radius: 8px;
+  box-shadow: 0 1px 3px rgba(30, 50, 100, .07);
+  transition: border-color .2s, box-shadow .2s;
+}
+.icon-btn:hover { background: #eef5fe; }
+.view-btn:hover, .btn-more:hover { border-color: #1a73e8; }
+.btn-primary {
+  border-radius: 8px;
+  background: linear-gradient(135deg, #1a73e8, #3b8bff);
+  box-shadow: 0 3px 10px rgba(26, 115, 232, .32);
+  transition: transform .15s, box-shadow .2s;
+}
+.btn-primary:hover { transform: translateY(-1px); box-shadow: 0 6px 16px rgba(26, 115, 232, .42); }
+
+/* ---------- Leave cards: fluid grid ---------- */
+.cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: clamp(10px, 1.2vw, 18px);
+  margin-bottom: 22px;
+}
+.leave-card {
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  padding: clamp(14px, 1.4vw, 22px);
+  border: 1px solid #fff;
+  border-radius: 16px;
+  background: linear-gradient(145deg, #fff 45%, var(--cbg, #eef5fe) 130%);
+  box-shadow: 0 4px 14px rgba(30, 50, 100, .08);
+  cursor: pointer;
+  transition: transform .25s, box-shadow .25s;
+  animation: riseIn .5s ease both;
+}
+.leave-card::before {
+  content: "";
+  position: absolute;
+  left: 0; top: 0; bottom: 0;
+  width: 5px;
+  background: var(--c, #1a73e8);
+}
+.leave-card:hover { transform: translateY(-4px); box-shadow: 0 14px 28px rgba(30, 50, 100, .15); }
+.leave-card:nth-child(2) { animation-delay: .06s; }
+.leave-card:nth-child(3) { animation-delay: .12s; }
+.leave-card:nth-child(4) { animation-delay: .18s; }
+
+.leave-card__top { display: flex; align-items: center; gap: 12px; }
+.leave-card__icon {
+  flex: none;
+  width: 46px;
+  height: 46px;
+  border-radius: 12px;
+  background: var(--cbg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform .3s;
+}
+.leave-card:hover .leave-card__icon { transform: scale(1.1) rotate(-5deg); }
+.leave-card__title { font-size: 1rem; font-weight: 600; color: #1a1f36; }
+
+.leave-card__big { display: flex; align-items: baseline; gap: 8px; }
+.leave-card__big b {
+  font-size: clamp(2rem, 2.4vw, 2.7rem);
+  font-weight: 700;
+  line-height: 1;
+  color: #1a1f36;
+}
+.leave-card__big b.is-green { color: #12b76a; }
+.leave-card__big span { color: #7a8194; }
+
+.leave-card__foot {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding-top: 12px;
+  border-top: 1px dashed #dfe3ee;
+}
+.leave-card__foot span { flex: 1; color: #6b7285; }
+.leave-card__foot b { font-weight: 600; }
+.leave-card__info { display: flex; }
+
+/* ---------- Panels ---------- */
+.panel {
+  border: none;
+  border-radius: 16px;
+  box-shadow: 0 4px 14px rgba(30, 50, 100, .07);
+  animation: riseIn .5s ease .2s both;
+}
+.panel__head, .panel__filter { border-bottom: 1px solid #f0f2f7; }
+.panel__head b { position: relative; padding-left: 14px; font-weight: 600; }
+.panel__head b::before {
+  content: "";
+  position: absolute;
+  left: 0; top: 2px; bottom: 2px;
+  width: 4px;
+  border-radius: 2px;
+  background: linear-gradient(#1a73e8, #7aa8ff);
+}
+
+.absent-rows, .holiday-rows { border: 1px solid #eef0f6; border-radius: 10px; overflow: hidden; }
+.absent-row { grid-template-columns: 1fr minmax(110px, 22%) 1fr; }
+.absent-row, .holiday-row { transition: background .2s; }
+.absent-row:hover, .holiday-row:hover { background: #f6f9ff; }
+.absent-row + .absent-row, .holiday-row + .holiday-row { border-top-color: #eef0f6; }
+.absent-row__days, .holiday-row__name { border-color: #eef0f6; }
+.btn-outline { border-radius: 8px; transition: background .2s, color .2s, box-shadow .2s; }
+.btn-outline:hover { background: #1a73e8; color: #fff; box-shadow: 0 4px 10px rgba(26, 115, 232, .3); }
+
+.select { border-radius: 8px; cursor: pointer; transition: border-color .2s, box-shadow .2s; }
+.select:hover { border-color: #b9c0d0; }
+.select:focus { outline: none; border-color: #1a73e8; box-shadow: 0 0 0 3px #e8f1fd; }
+
+/* ---------- Animation ---------- */
+@keyframes riseIn {
+  from { opacity: 0; transform: translateY(14px); }
+  to   { opacity: 1; transform: none; }
+}
+@media (prefers-reduced-motion: reduce) {
+  * { animation: none !important; transition: none !important; }
+}
+
+
 /* ================= RESPONSIVE ================= */
 
 /* Tablet and below */
@@ -233,11 +345,9 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
   .topbar, .subtabs { padding: 0 12px; }
   .content { padding: 0 12px 16px; }
 
-  /* tabs scroll sideways instead of breaking */
   .subtabs { overflow-x: auto; white-space: nowrap; }
   .subtabs__tab { flex: none; }
 
-  /* sticky bar wraps into compact rows */
   .summary-bar {
     flex-wrap: wrap;
     row-gap: 10px;
@@ -247,23 +357,8 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
   .year-nav__range { font-size: 14px; margin-left: 8px; }
   .summary-bar__actions { margin-left: auto; }
 
-  /* cards: 2 per row */
-  .cards { gap: 10px; }
-  .leave-card {
-    width: calc(50% - 5px);
-    padding: 16px 16px 8px;
-  }
-  .leave-card__title { font-size: 15px; }
-  .leave-card__icon { margin: 14px auto 12px; }
-
   .panel__head, .panel__filter { padding: 16px; }
   .absent-rows, .holiday-rows { margin: 6px 12px 16px; }
-
-  /* .form-card { width: 100%; }
-  .form-row { flex-direction: column; }
-  .form-row > label { width: auto; padding: 0 0 6px; }
-  .field { max-width: none; }
-  .date-pair { flex-direction: column; gap: 12px; } */
 }
 
 /* Phones */
@@ -271,7 +366,10 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
   .topbar { height: 50px; }
   .topbar__link, .subtabs__tab { font-size: 15px; }
 
-  /* Absent rows: date and days on the left, button on the right */
+  .cards { grid-template-columns: repeat(2, 1fr); }
+  .leave-card { gap: 12px; padding: 14px; }
+  .leave-card__top { flex-direction: column; align-items: flex-start; gap: 8px; }
+
   .absent-row {
     grid-template-columns: 1fr auto;
     grid-template-areas: "date action" "days action";
@@ -284,7 +382,6 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
   .absent-row__action { grid-area: action; padding-right: 12px; }
   .btn-outline { height: 34px; padding: 0 12px; font-size: 14px; }
 
-  /* Holiday rows: stacked */
   .select { width: 100%; }
   .holiday-row { grid-template-columns: 1fr; height: auto; padding: 8px 0; }
   .holiday-row > div { padding: 4px 12px; }
@@ -293,6 +390,6 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
 }
 
 /* Very small phones: cards one per row */
-@media (max-width: 360px) {
-  .leave-card { width: 100%; }
+@media (max-width: 340px) {
+  .cards { grid-template-columns: 1fr; }
 }
