@@ -13,6 +13,10 @@ const leaveSummary = {
        this.renderAbsent();
     });
 
+    document.getElementById("applyLeaveBtn").addEventListener("click", () => {
+      applyLeave.open();
+    });
+
     document.getElementById("nextYear").addEventListener("click", () => {
       this.year++;
       this.renderBar();
@@ -33,13 +37,15 @@ const leaveSummary = {
     document.getElementById("cards").addEventListener("click", (e) => {
       const card = e.target.closest(".leave-card");
       if (!card) return;
-      console.log("Open Apply Leave form with type:", card.dataset.id);
+      // console.log("Open Apply Leave form with type:", card.dataset.id);
+       applyLeave.open({ typeId: card.dataset.id });
     });
 
       document.getElementById("absentRows").addEventListener("click", (e) => {
       const row = e.target.closest(".absent-row");
       if (!row || !e.target.closest(".btn-outline")) return;
-      console.log("Open Apply Leave form for date:", row.dataset.date);
+      // console.log("Open Apply Leave form for date:", row.dataset.date);
+      applyLeave.open({ date: row.dataset.date });
     });
   },
 
