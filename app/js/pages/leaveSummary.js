@@ -67,7 +67,7 @@ const leaveSummary = {
     const info = `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#888" stroke-width="1.8"><circle cx="12" cy="12" r="9"/><path d="M12 11v6M12 7.5v.5"/></svg>`;
 
     document.getElementById("cards").innerHTML = mockData.leaveCards.map((c) => `
-      <div class="leave-card" data-id="${c.id}">
+      <div class="leave-card" data-id="${c.id}" style="--c:${c.color}; --cbg:${c.bg}">
         <div class="leave-card__title">${c.name}</div>
         <div class="leave-card__icon" style="background:${c.bg}">${this.icon(c.icon, c.color)}</div>
         <div class="leave-card__rows">

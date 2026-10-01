@@ -1,110 +1,124 @@
-const applyLeave = {
-  els: {},
+const leaveSummary = {
+  year: new Date().getFullYear(),
 
   init() {
-    const $ = (id) => document.getElementById(id);
-    this.els = {
-      modal: $("applyModal"), type: $("fLeaveType"),
-      from: $("fFrom"), to: $("fTo"),
-      fromPicker: $("fFromPicker"), toPicker: $("fToPicker"),
-      email: $("fEmail"), reason: $("fReason"),
-      errType: $("errType"), errDate: $("errDate"), errEmail: $("errEmail"),
-      badge: $("leaveBadge"), title: $("leaveTitle"),
-      chip: $("balanceChip"), days: $("daysChip")
-    };
+    this.renderAll();
 
-    $("applyClose").addEventListener("click", () => this.close());
-    $("applyCancel").addEventListener("click", () => this.close());
-    $("applySubmit").addEventListener("click", () => this.submit());
-    this.els.type.addEventListener("change", () => this.updateType());
-    document.addEventListener("keydown", (e) => { if (e.key === "Escape") this.close(); });
+    document.getElementById("prevYear").addEventListener("click", () => {
+      this.year--;
+      this.renderAll();
+    });
 
-    // calendar icons and inputs open the native date picker
-    document.querySelectorAll(".date-field").forEach((field) => {
-      const text = field.querySelector("input[type=text]");
-      const picker = field.querySelector("input[type=date]");
-      const openPicker = () => picker.showPicker ? picker.showPicker() : picker.click();
+    document.getElementById("nextYear").addEventListener("click", () => {
+      this.year++;
+      this.renderAll();
+    });
 
-      text.addEventListener("click", openPicker);
-      field.querySelector(".date-field__btn").addEventListener("click", openPicker);
-      picker.addEventListener("change", () => {
-        text.value = picker.value ? this.toDisplay(picker.value) : "";
-        // if "to" is empty, copy the "from" date as a convenience
-        if (text === this.els.from && !this.els.to.value && picker.value) {
-          this.setDate("to", picker.value);
-        }
+    // list / calendar view toggle (visual only for now)
+    const viewBtns = document.querySelectorAll(".view-btn");
+    viewBtns.forEach((btn) => {
+      btn.addEventListener("click", () => {
+        viewBtns.forEach((b) => b.classList.remove("is-active"));
+        btn.classList.add("is-active");
       });
+    });
+
+    // top Apply Leave button (will open the Zoho Creator form later)
+    document.getElementById("applyLeaveBtn").addEventListener("click", () => {
+      console.log("Open Apply Leave");
+    });
+
+    // leave cards
+    document.getElementById("cards").addEventListener("click", (e) => {
+      const card = e.target.closest(".leave-card");
+      if (!card) return;
+      console.log("Open Apply Leave for type:", card.dataset.id);
+    });
+
+    // absent rows
+    document.getElementById("absentRows").addEventListener("click", (e) => {
+      const row = e.target.closest(".absent-row");
+      if (!row || !e.target.closest(".btn-outline")) return;
+      console.log("Open Apply Leave for date:", row.dataset.date);
+    });
+
+    // upcoming / past dropdown
+    document.getElementById("holidayFilter").addEventListener("change", () => {
+      this.renderHolidays();
     });
   },
 
-  // dd-MM-yyyy <-> yyyy-MM-dd
-  toISO(d)     { const [dd, mm, yy] = d.split("-"); return `${yy}-${mm}-${dd}`; },
-  toDisplay(i) { const [yy, mm, dd] = i.split("-"); return `${dd}-${mm}-${yy}`; },
-
-  setDate(which, iso) {
-    const e = this.els;
-    (which === "from" ? e.from : e.to).value = iso ? this.toDisplay(iso) : "";
-    (which === "from" ? e.fromPicker : e.toPicker).value = iso || "";
+  renderAll() {
+    this.renderBar();
+    this.renderCards();
+    this.renderAbsent();
+    this.renderHolidays();
   },
 
-  // typeId: pre-select a leave type. date: "dd-MM-yyyy" pre-fills both dates.
-  open({ typeId = "", date = "" } = {}) {
-    const e = this.els;
-
-    e.type.innerHTML =
-      `<option value="">Select</option>` +
-      mockData.leaveCards.map((c) => `<option value="${c.id}">${c.name}</option>`).join("");
-    e.type.value = typeId;
-
-    const iso = date ? this.toISO(date) : "";
-    this.setDate("from", iso);
-    this.setDate("to", iso);
-
-    e.email.value = "";
-    e.reason.value = "";
-    this.clearErrors();
-
-    e.modal.classList.add("is-open");
-    document.body.classList.add("no-scroll");
+  renderBar() {
+    document.getElementById("leaveBooked").textContent = mockData.summary.leaveBooked;
+    document.getElementById("absentDays").textContent = mockData.summary.absentDays + " day(s)";
+    document.getElementById("dateRange").textContent = `01-01-${this.year} - 31-12-${this.year}`;
   },
 
-  close() {
-    this.els.modal.classList.remove("is-open");
-    document.body.classList.remove("no-scroll");
-  },
-
-  clearErrors() {
-    ["errType", "errDate", "errEmail"].forEach((k) => (this.els[k].textContent = ""));
-  },
-
-  submit() {
-    const e = this.els;
-    this.clearErrors();
-    let ok = true;
-
-    if (!e.type.value) { e.errType.textContent = "Select a leave type."; ok = false; }
-
-    if (!e.fromPicker.value || !e.toPicker.value) {
-      e.errDate.textContent = "Select both dates."; ok = false;
-    } else if (e.toPicker.value < e.fromPicker.value) {
-      e.errDate.textContent = "To date can't be before From date."; ok = false;
+  icon(type, color) {
+    if (type === "timer") {
+      return `<svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="${color}" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="13" r="7"/><circle cx="12" cy="13" r="3"/><path d="M10 3h4M12 3v3"/></svg>`;
     }
+    // sun over water
+    return `<svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="${color}" stroke-width="1.8" stroke-linecap="round"><path d="M7 13a5 5 0 0 1 10 0"/><path d="M12 4v2M5 7l1.5 1.5M19 7l-1.5 1.5M3 13h2M19 13h2"/><path d="M4 17c2-1.5 3-1.5 5 0s3 1.5 5 0 3-1.5 5 0M4 21c2-1.5 3-1.5 5 0s3 1.5 5 0 3-1.5 5 0"/></svg>`;
+  },
 
-    if (e.email.value && !/^\S+@\S+\.\S+$/.test(e.email.value)) {
-      e.errEmail.textContent = "Enter a valid email ID."; ok = false;
-    }
+  renderCards() {
+    const info = `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#888" stroke-width="1.8"><circle cx="12" cy="12" r="9"/><path d="M12 11v6M12 7.5v.5"/></svg>`;
 
-    if (!ok) return;
+    document.getElementById("cards").innerHTML = mockData.leaveCards.map((c) => `
+      <div class="leave-card" data-id="${c.id}">
+        <div class="leave-card__title">${c.name}</div>
+        <div class="leave-card__icon" style="background:${c.bg}">${this.icon(c.icon, c.color)}</div>
+        <div class="leave-card__rows">
+          <div class="leave-card__row">
+            <span>Available</span>
+            <b class="${c.available > 0 ? "is-green" : ""}">${c.available}</b>
+          </div>
+          <div class="leave-card__row">
+            <span>Booked</span>
+            <b>${c.booked}</b>
+            <i class="leave-card__info">${info}</i>
+          </div>
+        </div>
+      </div>
+    `).join("");
+  },
 
-    // Later this becomes a Zoho People API call
-    const payload = {
-      leaveType: e.type.value,
-      from: e.from.value,
-      to: e.to.value,
-      teamEmail: e.email.value,
-      reason: e.reason.value
-    };
-    console.log("Apply leave payload:", payload);
-    this.close();
+  renderAbsent() {
+    const list = mockData.absent;
+    const total = list.reduce((sum, a) => sum + a.days, 0);
+
+    document.getElementById("absentTitle").textContent = total + (total === 1 ? " day" : " days");
+
+    document.getElementById("absentRows").innerHTML = list.map((a) => `
+      <div class="absent-row" data-date="${a.date}">
+        <div class="absent-row__date">${a.date} , ${a.day}</div>
+        <div class="absent-row__days">${a.days} ${a.days === 1 ? "day" : "days"}</div>
+        <div class="absent-row__action">
+          <button class="btn-outline">Apply Leave</button>
+        </div>
+      </div>
+    `).join("");
+  },
+
+  renderHolidays() {
+    const type = document.getElementById("holidayFilter").value;
+    const list = mockData.holidays[type];
+    const calIcon = `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#666" stroke-width="1.8"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/></svg>`;
+
+    document.getElementById("holidayRows").innerHTML = list.map((h) => `
+      <div class="holiday-row">
+        <div class="holiday-row__date">${h.date}, ${h.day}</div>
+        <div class="holiday-row__name">${calIcon}<span>${h.name}</span></div>
+        <div class="holiday-row__extra"></div>
+      </div>
+    `).join("");
   }
 };

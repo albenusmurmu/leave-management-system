@@ -10,5 +10,5 @@ tabs.forEach((tab) => {
     document.getElementById("tab-" + tab.dataset.tab).classList.add("is-active");
   });
 });
-applyLeave.init();
+
 leaveSummary.init();
