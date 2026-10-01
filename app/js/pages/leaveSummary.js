@@ -2,26 +2,16 @@ const leaveSummary = {
   year: new Date().getFullYear(),
 
   init() {
-    this.renderBar();
-    this.renderCards();
-    this.renderAbsent();
+    this.renderAll();
 
     document.getElementById("prevYear").addEventListener("click", () => {
       this.year--;
-      this.renderBar();
-      this.renderCards();
-       this.renderAbsent();
-    });
-
-    document.getElementById("applyLeaveBtn").addEventListener("click", () => {
-      applyLeave.open();
+      this.renderAll();
     });
 
     document.getElementById("nextYear").addEventListener("click", () => {
       this.year++;
-      this.renderBar();
-      this.renderCards();
-       this.renderAbsent();
+      this.renderAll();
     });
 
     // list / calendar view toggle (visual only for now)
@@ -33,20 +23,36 @@ const leaveSummary = {
       });
     });
 
-    // clicking a card will open the Apply Leave form (built later)
+    // top Apply Leave button (will open the Zoho Creator form later)
+    document.getElementById("applyLeaveBtn").addEventListener("click", () => {
+      console.log("Open Apply Leave");
+    });
+
+    // leave cards
     document.getElementById("cards").addEventListener("click", (e) => {
       const card = e.target.closest(".leave-card");
       if (!card) return;
-      // console.log("Open Apply Leave form with type:", card.dataset.id);
-       applyLeave.open({ typeId: card.dataset.id });
+      console.log("Open Apply Leave for type:", card.dataset.id);
     });
 
-      document.getElementById("absentRows").addEventListener("click", (e) => {
+    // absent rows
+    document.getElementById("absentRows").addEventListener("click", (e) => {
       const row = e.target.closest(".absent-row");
       if (!row || !e.target.closest(".btn-outline")) return;
-      // console.log("Open Apply Leave form for date:", row.dataset.date);
-      applyLeave.open({ date: row.dataset.date });
+      console.log("Open Apply Leave for date:", row.dataset.date);
     });
+
+    // upcoming / past dropdown
+    document.getElementById("holidayFilter").addEventListener("change", () => {
+      this.renderHolidays();
+    });
+  },
+
+  renderAll() {
+    this.renderBar();
+    this.renderCards();
+    this.renderAbsent();
+    this.renderHolidays();
   },
 
   renderBar() {
@@ -68,23 +74,24 @@ const leaveSummary = {
 
     document.getElementById("cards").innerHTML = mockData.leaveCards.map((c) => `
       <div class="leave-card" data-id="${c.id}" style="--c:${c.color}; --cbg:${c.bg}">
-        <div class="leave-card__title">${c.name}</div>
-        <div class="leave-card__icon" style="background:${c.bg}">${this.icon(c.icon, c.color)}</div>
-        <div class="leave-card__rows">
-          <div class="leave-card__row">
-            <span>Available</span>
-            <b class="${c.available > 0 ? "is-green" : ""}">${c.available}</b>
-          </div>
-          <div class="leave-card__row">
-            <span>Booked</span>
-            <b>${c.booked}</b>
-            <i class="leave-card__info">${info}</i>
-          </div>
+        <div class="leave-card__top">
+          <div class="leave-card__icon">${this.icon(c.icon, c.color)}</div>
+          <div class="leave-card__title">${c.name}</div>
+        </div>
+        <div class="leave-card__big">
+          <b class="${c.available > 0 ? "is-green" : ""}">${c.available}</b>
+          <span>Available</span>
+        </div>
+        <div class="leave-card__foot">
+          <span>Booked</span>
+          <b>${c.booked}</b>
+          <i class="leave-card__info">${info}</i>
         </div>
       </div>
     `).join("");
   },
-    renderAbsent() {
+
+  renderAbsent() {
     const list = mockData.absent;
     const total = list.reduce((sum, a) => sum + a.days, 0);
 
@@ -97,6 +104,20 @@ const leaveSummary = {
         <div class="absent-row__action">
           <button class="btn-outline">Apply Leave</button>
         </div>
+      </div>
+    `).join("");
+  },
+
+  renderHolidays() {
+    const type = document.getElementById("holidayFilter").value;
+    const list = mockData.holidays[type];
+    const calIcon = `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#666" stroke-width="1.8"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/></svg>`;
+
+    document.getElementById("holidayRows").innerHTML = list.map((h) => `
+      <div class="holiday-row">
+        <div class="holiday-row__date">${h.date}, ${h.day}</div>
+        <div class="holiday-row__name">${calIcon}<span>${h.name}</span></div>
+        <div class="holiday-row__extra"></div>
       </div>
     `).join("");
   }
