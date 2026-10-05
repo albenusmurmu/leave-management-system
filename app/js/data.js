@@ -27,7 +27,14 @@ const mockData = {
       { date: "08-11-2026", name: "Diwali",                   type: "holiday" },
       { date: "25-12-2026", name: "Christmas",                type: "holiday" }
     ],
-      // Calendar: "fixed" holidays repeat every year (dd-mm), "dated" are one-offs (dd-mm-yyyy)
+    past: [
+      { date: "04-09-2026", name: "Janmashtami",      type: "holiday" },
+      { date: "28-08-2026", name: "Raksha Bandhan",   type: "holiday" },
+      { date: "15-08-2026", name: "Independence Day", type: "holiday" }
+    ]
+  },
+
+  // Calendar: "fixed" holidays repeat every year (dd-mm), "dated" are one-offs (dd-mm-yyyy)
   calendar: {
     minYear: 2020,
     maxYear: 2030,
@@ -43,11 +50,5 @@ const mockData = {
       "20-10-2026": "Dussehra (Vijayadashami)",
       "08-11-2026": "Diwali"
     }
-  },
-    past: [
-      { date: "04-09-2026", name: "Janmashtami",      type: "holiday" },
-      { date: "28-08-2026", name: "Raksha Bandhan",   type: "holiday" },
-      { date: "15-08-2026", name: "Independence Day", type: "holiday" }
-    ]
   }
 };
