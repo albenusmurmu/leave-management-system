@@ -11,4 +11,5 @@ tabs.forEach((tab) => {
   });
 });
 
+calendarView.init();
 leaveSummary.init();
