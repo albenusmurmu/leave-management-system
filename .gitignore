@@ -8,3 +8,5 @@ key.pem
 
 *.log
 .DS_Store
+
+dist/
