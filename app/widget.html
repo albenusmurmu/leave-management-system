@@ -70,15 +70,20 @@
         <div class="absent-rows" id="absentRows"></div>
       </div>
 
-      <!-- UPCOMING / PAST LEAVES & HOLIDAYS -->
+      <!-- AGENDA: upcoming / past leaves and holidays -->
       <div class="panel">
-        <div class="panel__filter">
-          <select id="holidayFilter" class="select" autocomplete="off">
-            <option value="upcoming">Upcoming Leaves &amp; Holidays</option>
-            <option value="past">Past Leaves &amp; Holidays</option>
-          </select>
+        <div class="agenda-head">
+          <div class="seg" id="periodSeg">
+            <button class="seg__btn is-active" data-period="upcoming">Upcoming</button>
+            <button class="seg__btn" data-period="past">Past</button>
+          </div>
+          <div class="chips" id="kindChips">
+            <button class="chip is-active" data-kind="all">All</button>
+            <button class="chip" data-kind="leave">Leaves</button>
+            <button class="chip" data-kind="holiday">Holidays</button>
+          </div>
         </div>
-        <div class="holiday-rows" id="holidayRows"></div>
+        <div class="agenda" id="agenda"></div>
       </div>
 
     </section>

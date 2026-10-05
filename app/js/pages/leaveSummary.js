@@ -1,5 +1,7 @@
 const leaveSummary = {
   year: new Date().getFullYear(),
+  period: "upcoming",
+  kind: "all",
 
   init() {
     this.renderAll();
@@ -42,9 +44,27 @@ const leaveSummary = {
       console.log("Open Apply Leave for date:", row.dataset.date);
     });
 
-    // upcoming / past dropdown
-    document.getElementById("holidayFilter").addEventListener("change", () => {
-      this.renderHolidays();
+    // // upcoming / past dropdown
+    // document.getElementById("holidayFilter").addEventListener("change", () => {
+    //   this.renderHolidays();
+    // });
+
+        // upcoming / past switch
+    document.getElementById("periodSeg").addEventListener("click", (e) => {
+      const btn = e.target.closest(".seg__btn");
+      if (!btn) return;
+      this.period = btn.dataset.period;
+      document.querySelectorAll(".seg__btn").forEach((b) => b.classList.toggle("is-active", b === btn));
+      this.renderAgenda();
+    });
+
+    // all / leaves / holidays chips
+    document.getElementById("kindChips").addEventListener("click", (e) => {
+      const chip = e.target.closest(".chip");
+      if (!chip) return;
+      this.kind = chip.dataset.kind;
+      document.querySelectorAll(".chip").forEach((c) => c.classList.toggle("is-active", c === chip));
+      this.renderAgenda();
     });
   },
 
@@ -52,7 +72,8 @@ const leaveSummary = {
     this.renderBar();
     this.renderCards();
     this.renderAbsent();
-    this.renderHolidays();
+    // this.renderHolidays();
+    this.renderAgenda();
   },
 
   renderBar() {
@@ -108,17 +129,57 @@ const leaveSummary = {
     `).join("");
   },
 
-  renderHolidays() {
-    const type = document.getElementById("holidayFilter").value;
-    const list = mockData.holidays[type];
-    const calIcon = `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#666" stroke-width="1.8"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/></svg>`;
+  // renderHolidays() {
+  //   const type = document.getElementById("holidayFilter").value;
+  //   const list = mockData.holidays[type];
+  //   const calIcon = `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#666" stroke-width="1.8"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/></svg>`;
 
-    document.getElementById("holidayRows").innerHTML = list.map((h) => `
-      <div class="holiday-row">
-        <div class="holiday-row__date">${h.date}, ${h.day}</div>
-        <div class="holiday-row__name">${calIcon}<span>${h.name}</span></div>
-        <div class="holiday-row__extra"></div>
-      </div>
-    `).join("");
+  //   document.getElementById("holidayRows").innerHTML = list.map((h) => `
+  //     <div class="holiday-row">
+  //       <div class="holiday-row__date">${h.date}, ${h.day}</div>
+  //       <div class="holiday-row__name">${calIcon}<span>${h.name}</span></div>
+  //       <div class="holiday-row__extra"></div>
+  //     </div>
+  //   `).join("");
+  // }
+
+    renderAgenda() {
+    const months = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+    const days = ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"];
+    const toDate = (s) => { const [d, m, y] = s.split("-"); return new Date(+y, m - 1, +d); };
+
+    let list = mockData.agenda[this.period].filter((x) => this.kind === "all" || x.type === this.kind);
+
+    // upcoming: nearest first, past: latest first
+    list = list.slice().sort((a, b) =>
+      this.period === "upcoming" ? toDate(a.date) - toDate(b.date) : toDate(b.date) - toDate(a.date));
+
+    const el = document.getElementById("agenda");
+
+    if (!list.length) {
+      el.innerHTML = `
+        <div class="empty">
+          <svg width="56" height="56" viewBox="0 0 24 24" fill="none" stroke="#b6bdd1" stroke-width="1.4" stroke-linecap="round"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4M9 15h6"/></svg>
+          <p>No data found</p>
+        </div>`;
+      return;
+    }
+
+    el.innerHTML = list.map((x) => {
+      const d = toDate(x.date);
+      const tag = x.type === "leave"
+        ? `Leave · ${x.days} ${x.days === 1 ? "day" : "days"}`
+        : "Holiday";
+      return `
+        <div class="agenda-item agenda-item--${x.type}">
+          <div class="date-badge"><b>${String(d.getDate()).padStart(2, "0")}</b><span>${months[d.getMonth()]}</span></div>
+          <div class="agenda-item__main">
+            <div class="agenda-item__name">${x.name}</div>
+            <div class="agenda-item__sub">${days[d.getDay()]} · ${x.date}</div>
+          </div>
+          <span class="tag tag--${x.type}">${tag}</span>
+        </div>`;
+    }).join("");
   }
+  
 };

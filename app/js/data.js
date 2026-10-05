@@ -18,17 +18,36 @@ const mockData = {
     { date: "27-08-2026", day: "Thursday", days: 1 }
   ],
 
-  holidays: {
+  // each item has a type: "holiday" or "leave"
+  agenda: {
     upcoming: [
-      { date: "02-10-2026", day: "Friday",  name: "Gandhi Jayanti" },
-      { date: "20-10-2026", day: "Tuesday", name: "Dussehra (Vijayadashami)" },
-      { date: "08-11-2026", day: "Sunday",  name: "Diwali" },
-      { date: "25-12-2026", day: "Friday",  name: "Christmas" }
+      { date: "02-10-2026", name: "Gandhi Jayanti",           type: "holiday" },
+      { date: "06-10-2026", name: "Earned Leave",             type: "leave", days: 1 },  // sample
+      { date: "20-10-2026", name: "Dussehra (Vijayadashami)", type: "holiday" },
+      { date: "08-11-2026", name: "Diwali",                   type: "holiday" },
+      { date: "25-12-2026", name: "Christmas",                type: "holiday" }
     ],
+      // Calendar: "fixed" holidays repeat every year (dd-mm), "dated" are one-offs (dd-mm-yyyy)
+  calendar: {
+    minYear: 2020,
+    maxYear: 2030,
+    fixed: {
+      "26-01": "Republic Day",
+      "15-08": "Independence Day",
+      "02-10": "Gandhi Jayanti",
+      "25-12": "Christmas"
+    },
+    dated: {
+      "28-08-2026": "Raksha Bandhan",
+      "04-09-2026": "Janmashtami",
+      "20-10-2026": "Dussehra (Vijayadashami)",
+      "08-11-2026": "Diwali"
+    }
+  },
     past: [
-      { date: "04-09-2026", day: "Friday",   name: "Janmashtami" },
-      { date: "28-08-2026", day: "Friday",   name: "Raksha Bandhan" },
-      { date: "15-08-2026", day: "Saturday", name: "Independence Day" }
+      { date: "04-09-2026", name: "Janmashtami",      type: "holiday" },
+      { date: "28-08-2026", name: "Raksha Bandhan",   type: "holiday" },
+      { date: "15-08-2026", name: "Independence Day", type: "holiday" }
     ]
   }
 };
