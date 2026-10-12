@@ -813,8 +813,63 @@ textarea.ap-input { height: 100px; padding: 12px 14px; resize: vertical; }
 .ap-row:nth-child(1) { z-index: 10; }
 .ap-select__panel { z-index: 50; }
 
+/* ---------- custom date calendar ---------- */
+.ap-row:nth-child(2) { z-index: 9; }          /* date row sits above the rows below it */
+
+.ap-cal {
+  position: absolute;
+  top: calc(100% + 6px);
+  left: 0;
+  z-index: 60;
+  width: 290px;
+  padding: 14px;
+  background: #fff;
+  border: 1px solid #eef0f6;
+  border-radius: 14px;
+  box-shadow: 0 16px 38px rgba(30, 50, 100, .22);
+  animation: apDrop .18s ease;
+}
+.ap-date:last-child .ap-cal { left: auto; right: 0; }
+
+.ap-cal__head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; }
+.ap-cal__head b { font-size: 15px; color: #1a1f36; }
+.ap-cal__nav {
+  width: 30px;
+  height: 30px;
+  border-radius: 8px;
+  color: var(--accent);
+  background: var(--accent-bg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform .15s;
+}
+.ap-cal__nav:hover { transform: scale(1.1); }
+
+.ap-cal__week, .ap-cal__grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 2px; }
+.ap-cal__week span { padding: 6px 0; text-align: center; font-size: 12px; font-weight: 600; color: #98a0b3; }
+.ap-cal__week span:first-child, .ap-cal__grid > :nth-child(7n+1) { color: #e5484d; }
+
+.ap-cal__day {
+  height: 34px;
+  font-size: 14px;
+  color: #2a3042;
+  border-radius: 8px;
+  transition: background .15s, color .15s;
+}
+.ap-cal__day:hover:not(:disabled) { background: var(--accent-bg); }
+.ap-cal__day.is-today { box-shadow: inset 0 0 0 1.5px var(--accent); }
+.ap-cal__day.is-sel { background: var(--accent); color: #fff; font-weight: 600; box-shadow: none; }
+.ap-cal__day:disabled { color: #c9ceda; cursor: not-allowed; }
+
+.ap-cal__foot { display: flex; justify-content: space-between; margin-top: 10px; padding-top: 10px; border-top: 1px solid #f0f2f7; }
+.ap-cal__foot button { padding: 6px 12px; font-size: 13px; color: var(--accent); border-radius: 6px; }
+.ap-cal__foot button:hover { background: var(--accent-bg); }
+
 /* form on phones and small tablets */
 @media (max-width: 700px) {
+  .ap-cal { width: min(290px, calc(100vw - 40px)); }
+  .ap-date:last-child .ap-cal { left: 0; right: auto; }
   .ap-body { padding: 14px 10px; }
   .ap-card__head, .ap-form { padding-left: 16px; padding-right: 16px; }
   .ap-row { grid-template-columns: 1fr; gap: 6px; }

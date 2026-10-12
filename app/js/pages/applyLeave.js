@@ -2,6 +2,9 @@ const applyLeave = {
   els: {},
   typeId: "",
   toastTimer: null,
+  calEl: null,
+  cal: { which: "from", year: 0, month: 0 },
+  MONTHS: ["January","February","March","April","May","June","July","August","September","October","November","December"],
 
   init() {
     const $ = (id) => document.getElementById(id);
@@ -35,24 +38,25 @@ const applyLeave = {
     });
     document.addEventListener("keydown", (ev) => {
       if (ev.key !== "Escape" || e.modal.hidden) return;
+      if (!this.calEl.hidden) { this.closeCal(); return; }
       if (e.box.classList.contains("is-open")) this.toggleList(false);
       else this.close();
     });
 
-    // date fields: text box + calendar icon open the native date picker
-    document.querySelectorAll(".ap-date").forEach((field) => {
-      const text = field.querySelector("input[type=text]");
-      const picker = field.querySelector("input[type=date]");
-      const openPicker = () => (picker.showPicker ? picker.showPicker() : picker.click());
+    // custom calendar (the browser's native picker is blocked inside Creator's iframe)
+    this.calEl = document.createElement("div");
+    this.calEl.className = "ap-cal";
+    this.calEl.hidden = true;
+    this.calEl.addEventListener("click", (ev) => this.onCalClick(ev));
 
-      text.addEventListener("click", openPicker);
-      field.querySelector(".ap-date__btn").addEventListener("click", openPicker);
-      picker.addEventListener("change", () => {
-        text.value = picker.value ? this.toDisplay(picker.value) : "";
-        // if "to" is empty, copy the "from" date
-        if (text === e.from && !e.to.value && picker.value) this.setDate("to", picker.value);
-        this.updateDays();
-      });
+    document.querySelectorAll(".ap-date").forEach((field, i) => {
+      const which = i === 0 ? "from" : "to";
+      const open = (ev) => { ev.stopPropagation(); this.openCal(which, field); };
+      field.querySelector("input[type=text]").addEventListener("click", open);
+      field.querySelector(".ap-date__btn").addEventListener("click", open);
+    });
+    document.addEventListener("click", (ev) => {
+      if (!ev.target.closest(".ap-cal")) this.closeCal();
     });
 
     e.reason.addEventListener("input", () => {
@@ -63,6 +67,9 @@ const applyLeave = {
   // dd-MM-yyyy <-> yyyy-MM-dd
   toISO(d)     { const [dd, mm, yy] = d.split("-"); return `${yy}-${mm}-${dd}`; },
   toDisplay(i) { const [yy, mm, dd] = i.split("-"); return `${dd}-${mm}-${yy}`; },
+  isoOf(d) {
+    return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
+  },
 
   setDate(which, iso) {
     const e = this.els;
@@ -85,12 +92,103 @@ const applyLeave = {
     this.clearErrors();
     this.updateDays();
     this.toggleList(false);
+    this.closeCal();
 
     e.modal.hidden = false;
   },
 
   close() {
+    this.closeCal();
     this.els.modal.hidden = true;
+  },
+
+  // ---------- custom calendar ----------
+  openCal(which, field) {
+    const e = this.els;
+    const own = (which === "from" ? e.fromPicker : e.toPicker).value;
+    const base = own || e.fromPicker.value;
+    const d = base ? new Date(base + "T00:00:00") : new Date();
+
+    this.cal = { which, year: d.getFullYear(), month: d.getMonth() };
+    this.toggleList(false);
+    field.appendChild(this.calEl);
+    this.calEl.hidden = false;
+    this.renderCal();
+  },
+
+  closeCal() {
+    if (this.calEl) this.calEl.hidden = true;
+  },
+
+  renderCal() {
+    const { which, year, month } = this.cal;
+    const e = this.els;
+    const selected = (which === "from" ? e.fromPicker : e.toPicker).value;
+    const min = which === "to" ? e.fromPicker.value : "";
+    const today = this.isoOf(new Date());
+
+    const lead = new Date(year, month, 1).getDay();            // Sunday first
+    const total = new Date(year, month + 1, 0).getDate();
+    let cells = "";
+    for (let i = 0; i < lead; i++) cells += `<span class="ap-cal__blank"></span>`;
+    for (let d = 1; d <= total; d++) {
+      const iso = `${year}-${String(month + 1).padStart(2, "0")}-${String(d).padStart(2, "0")}`;
+      const cls = ["ap-cal__day", iso === selected ? "is-sel" : "", iso === today ? "is-today" : ""].join(" ");
+      cells += `<button type="button" class="${cls}" data-iso="${iso}" ${min && iso < min ? "disabled" : ""}>${d}</button>`;
+    }
+
+    this.calEl.innerHTML = `
+      <div class="ap-cal__head">
+        <button type="button" class="ap-cal__nav" data-nav="-1" title="Previous month">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M15 5l-7 7 7 7"/></svg>
+        </button>
+        <b>${this.MONTHS[month]} ${year}</b>
+        <button type="button" class="ap-cal__nav" data-nav="1" title="Next month">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M9 5l7 7-7 7"/></svg>
+        </button>
+      </div>
+      <div class="ap-cal__week"><span>Su</span><span>Mo</span><span>Tu</span><span>We</span><span>Th</span><span>Fr</span><span>Sa</span></div>
+      <div class="ap-cal__grid">${cells}</div>
+      <div class="ap-cal__foot">
+        <button type="button" data-clear="1">Clear</button>
+        <button type="button" data-today="1">Today</button>
+      </div>`;
+  },
+
+  onCalClick(ev) {
+    ev.stopPropagation();                       // keep the calendar open while re-rendering
+    const nav = ev.target.closest("[data-nav]");
+    if (nav) {
+      let m = this.cal.month + Number(nav.dataset.nav);
+      let y = this.cal.year;
+      if (m < 0)  { m = 11; y--; }
+      if (m > 11) { m = 0;  y++; }
+      this.cal.month = m;
+      this.cal.year = y;
+      this.renderCal();
+      return;
+    }
+    const day = ev.target.closest(".ap-cal__day");
+    if (day && !day.disabled) { this.pickDate(day.dataset.iso); return; }
+    if (ev.target.closest("[data-today]")) { this.pickDate(this.isoOf(new Date())); return; }
+    if (ev.target.closest("[data-clear]")) {
+      this.setDate(this.cal.which, "");
+      this.updateDays();
+      this.closeCal();
+    }
+  },
+
+  pickDate(iso) {
+    const e = this.els;
+    const which = this.cal.which;
+    if (which === "to" && e.fromPicker.value && iso < e.fromPicker.value) return;   // "to" can't be before "from"
+
+    this.setDate(which, iso);
+    // "from" moved past "to", or "to" is empty: keep them in step
+    if (which === "from" && (!e.toPicker.value || e.toPicker.value < iso)) this.setDate("to", iso);
+
+    this.updateDays();
+    this.closeCal();
   },
 
   // ---------- dropdown ----------
@@ -99,6 +197,7 @@ const applyLeave = {
     const open = typeof force === "boolean" ? force : !e.box.classList.contains("is-open");
     e.box.classList.toggle("is-open", open);
     if (open) {
+      this.closeCal();
       e.search.value = "";
       this.renderList();
       setTimeout(() => e.search.focus(), 30);
