@@ -15,23 +15,23 @@ const leaveSummary = {
       btn.addEventListener("click", () => this.setView(btn.dataset.view));
     });
 
-    // top Apply Leave button (will open the Zoho Creator form later)
+    // top Apply Leave button: leave type stays on "Select"
     document.getElementById("applyLeaveBtn").addEventListener("click", () => {
-      console.log("Open Apply Leave");
+      applyLeave.open();
     });
 
-    // leave cards
+    // leave cards: open the form with that leave type selected
     document.getElementById("cards").addEventListener("click", (e) => {
       const card = e.target.closest(".leave-card");
       if (!card) return;
-      console.log("Open Apply Leave for type:", card.dataset.id);
+      applyLeave.open({ typeId: card.dataset.id });
     });
 
-    // absent rows
+    // absent rows: open the form with the date pre-filled
     document.getElementById("absentRows").addEventListener("click", (e) => {
       const row = e.target.closest(".absent-row");
       if (!row || !e.target.closest(".btn-outline")) return;
-      console.log("Open Apply Leave for date:", row.dataset.date);
+      applyLeave.open({ date: row.dataset.date });
     });
 
     // upcoming / past switch

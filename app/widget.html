@@ -127,7 +127,100 @@
     </div>
   </div>
 
+  <!-- ========== APPLY LEAVE FORM ========== -->
+  <div class="ap-modal" id="applyModal" hidden>
+    <div class="ap-head">
+      <h2>Apply Leave</h2>
+      <button class="ap-close" id="applyClose" title="Close">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#444" stroke-width="2.5"><path d="M5 5l14 14M19 5L5 19"/></svg>
+      </button>
+    </div>
+
+    <div class="ap-body">
+      <div class="ap-card" id="applyCard">
+
+        <div class="ap-card__head">
+          <span class="ap-badge" id="apBadge"></span>
+          <span class="ap-card__title" id="apTitle">Leave</span>
+          <span class="ap-chip" id="apChip" hidden></span>
+        </div>
+
+        <div class="ap-form">
+
+          <div class="ap-row">
+            <label>Leave type <span class="req">*</span></label>
+            <div class="ap-field">
+              <div class="ap-select" id="typeBox">
+                <button type="button" class="ap-select__btn" id="typeBtn">
+                  <span id="typeLabel" class="is-placeholder">Select</span>
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#555" stroke-width="2.4"><path d="M6 9l6 6 6-6"/></svg>
+                </button>
+                <div class="ap-select__panel">
+                  <div class="ap-search">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#888" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></svg>
+                    <input type="text" id="typeSearch" placeholder="Search leave type" autocomplete="off">
+                  </div>
+                  <div class="ap-list" id="typeList"></div>
+                </div>
+              </div>
+              <div class="ap-error" id="errType"></div>
+            </div>
+          </div>
+
+          <div class="ap-row">
+            <label>Date <span class="req">*</span></label>
+            <div class="ap-field">
+              <div class="ap-date-pair">
+                <div class="ap-date">
+                  <input type="text" id="fFrom" class="ap-input" placeholder="dd-MM-yyyy" readonly>
+                  <button type="button" class="ap-date__btn" title="Pick date">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#555" stroke-width="2"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/></svg>
+                  </button>
+                  <input type="date" id="fFromPicker" class="ap-date__native" tabindex="-1">
+                </div>
+                <div class="ap-date">
+                  <input type="text" id="fTo" class="ap-input" placeholder="dd-MM-yyyy" readonly>
+                  <button type="button" class="ap-date__btn" title="Pick date">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#555" stroke-width="2"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/></svg>
+                  </button>
+                  <input type="date" id="fToPicker" class="ap-date__native" tabindex="-1">
+                </div>
+              </div>
+              <span class="ap-days" id="apDays" hidden></span>
+              <div class="ap-error" id="errDate"></div>
+            </div>
+          </div>
+
+          <div class="ap-row">
+            <label for="fEmail">Team Email ID</label>
+            <div class="ap-field">
+              <input type="text" id="fEmail" class="ap-input" placeholder="name@company.com">
+              <div class="ap-error" id="errEmail"></div>
+            </div>
+          </div>
+
+          <div class="ap-row">
+            <label for="fReason">Reason for leave</label>
+            <div class="ap-field">
+              <textarea id="fReason" class="ap-input" rows="4" maxlength="250" placeholder="Write a short reason (optional)"></textarea>
+              <div class="ap-count" id="apCount">0/250</div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <div class="ap-foot">
+      <button class="btn-primary" id="applySubmit">Submit</button>
+      <button class="ap-cancel" id="applyCancel">Cancel</button>
+    </div>
+  </div>
+
+  <div class="toast" id="toast" hidden></div>
+
   <script src="js/data.js"></script>
+  <script src="js/pages/applyLeave.js"></script>
   <script src="js/pages/calendarView.js"></script>
   <script src="js/pages/leaveSummary.js"></script>
   <script src="js/main.js"></script>

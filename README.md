@@ -1,192 +1,325 @@
 # Leave Management System
 
-A custom Leave Management System built to provide a modern, user-friendly interface for employees to apply for leave, track leave requests, view leave summaries, and manage leave-related activities.
+A custom, modern Leave Management widget built with plain HTML, CSS and JavaScript using the **Zoho Extension Toolkit (ZET)**. It is deployed as a **custom widget inside a Zoho Creator page** and replaces the standard Zoho People "Leave Tracker > My Data" screen with a cleaner, responsive UI.
 
-The project is being developed as a customized alternative to the standard leave management experience, with a focus on a clean UI, reusable components, API-based data handling, and future integration with Zoho People.
-
----
-
-## 📌 Project Overview
-
-The Leave Management System is designed to manage the complete employee leave lifecycle.
-
-The system allows employees to:
-
-- View their leave summary
-- Check available leave balances
-- Apply for leave
-- View submitted leave requests
-- Track leave request status
-- View upcoming leaves and holidays
-- Manage compensatory leave requests
-- View team-related leave information
-- Track absent days
-- Interact with a modern custom dashboard
-
-The application is currently being developed with a custom frontend and backend architecture.
-
-The initial development uses mock/local data for UI development and testing. The application will later be connected with Zoho People APIs to retrieve and manage real employee and leave data.
+> **Current status:** the frontend (My Data > Leave Summary) is complete and deployed on Zoho Creator using mock data. Live data from Zoho Creator forms/reports, the Leave Requests tab and the Compensatory Request tab are the next phases.
 
 ---
 
-# 🎯 Project Objectives
+## Table of Contents
 
-The main objectives of this project are:
-
-1. Build a modern and responsive Leave Management interface.
-2. Replace the standard leave UI with a customized user experience.
-3. Create reusable frontend pages and components.
-4. Separate frontend and backend responsibilities.
-5. Prepare the application for Zoho People API integration.
-6. Implement employee leave application functionality.
-7. Implement leave request tracking.
-8. Implement leave approval workflow.
-9. Display real-time leave information.
-10. Provide a scalable structure for future HRMS features.
+1. [Features](#features)
+2. [Tech Stack](#tech-stack)
+3. [Project Structure](#project-structure)
+4. [Prerequisites](#prerequisites)
+5. [Getting Started (Local Development)](#getting-started-local-development)
+6. [Mock Data](#mock-data)
+7. [Deployment to Zoho Creator](#deployment-to-zoho-creator)
+8. [Updating a Deployed Widget](#updating-a-deployed-widget)
+9. [Troubleshooting](#troubleshooting)
+10. [Roadmap](#roadmap)
+11. [Git Workflow](#git-workflow)
 
 ---
 
-# 🏗️ Application Architecture
+## Features
 
-The project follows a frontend + backend architecture.
+### My Data > Leave Summary (done)
+
+- **Sticky summary bar** that stays visible while scrolling: `Leave booked this year | Absent`, year navigator, list/calendar toggle, Apply Leave button and the "..." menu.
+- **Leave balance cards** for Compensatory Off, Earned Leave, Leave Without Pay and Sick Leave, showing Available and Booked counts. Cards are built from data and use a fluid grid that fits any screen size or browser zoom.
+- **Absent list** with date, number of days and an Apply Leave button per row.
+- **Agenda panel** with an Upcoming / Past switch and All / Leaves / Holidays filters, plus an empty state.
+- **Calendar view** with a Monday-to-Sunday month grid, today highlight, weekend tint, and labels for holidays, leaves and absent days. Navigation runs from 2020 to 2030.
+- **Sync popup** (the "..." button): "Choose Calendar to sync Leave and Holiday data" with Microsoft 365 and Google options (UI only for now).
+- **Responsive design** for desktop, tablet and Android phones.
+
+### Planned
+
+- Leave Requests tab
+- Compensatory Request tab
+- Real data from Zoho Creator
+- Apply Leave buttons opening the Creator form (with leave type or date pre-filled)
+- Calendar sync with Microsoft 365 and Google
+
+> The Apply Leave **form itself is not built in this widget**. It is created in Zoho Creator, and the widget only shows the data.
+
+---
+
+## Tech Stack
+
+| Layer | Technology |
+|---|---|
+| UI | HTML5, CSS3 (Grid, Flexbox, custom properties) |
+| Logic | Vanilla JavaScript (no framework) |
+| Tooling | Zoho Extension Toolkit (ZET), Node.js |
+| Hosting | Zoho Creator (custom widget, Internal hosting) |
+| Data | Mock data now, Zoho Creator data next |
+
+---
+
+## Project Structure
 
 ```text
-                    Leave Management System
-                              |
-               +--------------+--------------+
-               |                             |
-           Frontend                       Backend
-               |                             |
-        HTML / CSS / JS              Node.js / Server
-               |                             |
-               +--------------+--------------+
-                              |
-                        API Integration
-                              |
-                        Zoho People
-                              |
-                    Employee Leave Data
-
-```
-
-## Frontend
-
-The frontend is responsible for:
-
-- User interface
-- Navigation
-- Leave summary
-- Leave request screens
-- Forms
-- Cards
-- Tables
-- Buttons
-- Filters
-- User interactions
-- Responsive design
-
-## Backend
-
-The backend is responsible for:
-
-- Server-side processing
-- API communication
-- Authentication/authorization handling
-- Data processing
-- Future Zoho People API integration
-- Secure communication between frontend and external APIs
-
-## Zoho People
-
-Zoho People will act as the primary HR/leave data source.
-
-The future implementation will use Zoho People APIs to retrieve and update:
-
-- Employee information
-- Leave balances
-- Leave requests
-- Leave types
-- Leave status
-- Holidays
-- Team information
-- Approval information
-
-## 📂 Project Structure
-
-Current project structure:
-
-```
 Leave Management System/
 │
-├── app/
-│   │
+├── app/                          # Everything inside this folder is packaged and deployed
 │   ├── css/
-│   │   └── style.css
-│   │
+│   │   └── style.css             # All styles, theme and responsive rules
 │   ├── js/
-│   │   ├── data.js
-│   │   ├── main.js
-│   │   │
+│   │   ├── data.js               # Mock data (to be replaced by Creator data)
+│   │   ├── main.js               # Tab switching and app start
 │   │   └── pages/
-│   │       ├── compensatoryRequest.js
-│   │       ├── leaveRequests.js
-│   │       └── leaveSummary.js
-│   │
+│   │       ├── leaveSummary.js       # Cards, Absent list, Agenda, view toggle
+│   │       ├── calendarView.js       # Month grid and sync popup
+│   │       ├── leaveRequests.js      # (empty, next phase)
+│   │       └── compensatoryRequest.js# (empty, next phase)
 │   ├── translations/
 │   │   └── en.json
-│   │
-│   └── widget.html
+│   └── widget.html               # Entry point (the Index File)
 │
 ├── server/
-│   └── index.js
+│   └── index.js                  # Local ZET test server (not deployed)
 │
-├── node_modules/
-│
+├── dist/                         # Generated by `zet pack` (the ZIP to upload)
+├── plugin-manifest.json          # Widget configuration (service: CREATOR)
 ├── package.json
-├── package-lock.json
-├── plugin-manifest.json
+├── cert.pem / key.pem            # Local HTTPS certificates (not deployed, do not commit)
 ├── .gitignore
-├── README.md
-│
-└── certificate/private files
+└── README.md
 ```
 
-## 🎨 Frontend Structure
+### How the pieces connect
 
-The frontend is located inside the app directory.
+`widget.html` loads the scripts in this order, and the order matters:
 
+```html
+<script src="js/data.js"></script>
+<script src="js/pages/calendarView.js"></script>
+<script src="js/pages/leaveSummary.js"></script>
+<script src="js/main.js"></script>
 ```
-app/
-│
-├── css/
-│   └── style.css
-│
-├── js/
-│   ├── data.js
-│   ├── main.js
-│   │
-│   └── pages/
-│       ├── leaveSummary.js
-│       ├── leaveRequests.js
-│       └── compensatoryRequest.js
-│
-├── translations/
-│   └── en.json
-│
-└── widget.html
+
+`data.js` defines `mockData`, the page scripts define their objects, and `main.js` calls `calendarView.init()` and `leaveSummary.init()`.
+
+---
+
+## Prerequisites
+
+- **Node.js** (LTS) and npm
+- **Zoho Extension Toolkit**:
+  ```bash
+  npm install -g zoho-extension-toolkit
+  ```
+- **VS Code** (optional) with the **Live Server** extension for quick UI preview
+- A **Zoho Creator** account with access to the app where the widget will be added
+- **Git** for version control
+
+### Windows PowerShell note
+
+If `npm` or `zet` fails with "running scripts is disabled on this system", run this once:
+
+```powershell
+Set-ExecutionPolicy -Scope CurrentUser -ExecutionPolicy RemoteSigned
 ```
-### widget.html
 
-This is the main HTML entry point for the application.
+Alternatively, use `npm.cmd` or switch the terminal to Command Prompt.
 
-It provides the basic structure of the Leave Management System UI.
+---
 
-Responsibilities include:
+## Getting Started (Local Development)
 
-- Application container
-- Navigation
-- Page sections
-- UI structure
-- Loading JavaScript files
-- Loading CSS
-- Connecting frontend modules
+1. **Clone the repository**
+   ```bash
+   git clone https://github.com/albenusmurmu/leave-management-system.git
+   cd leave-management-system
+   ```
+
+2. **Install dependencies**
+   ```bash
+   npm install
+   ```
+
+3. **Run the UI locally** using either option:
+
+   **Option A: Live Server (fastest for UI work)**
+   Right-click `app/widget.html` in VS Code and choose **Open with Live Server**. The page opens at `http://127.0.0.1:5500/app/widget.html`.
+
+   **Option B: ZET server**
+   ```bash
+   npm start
+   ```
+   The widget is served at `https://127.0.0.1:5000/app/widget.html`. Open that address once in the browser and choose **Advanced > Proceed to 127.0.0.1 (unsafe)** to accept the local certificate.
+
+4. **Hard refresh** (`Ctrl + Shift + R`) after every change so the browser does not use cached CSS or JS.
+
+> Tip: use the browser's responsive mode (`Ctrl + Shift + M`) and zoom (`Ctrl +` / `Ctrl -`) to check the mobile layout and the fluid card grid.
+
+---
+
+## Mock Data
+
+All data lives in `app/js/data.js` as a single `mockData` object:
+
+```text
+mockData
+├── summary      leaveBooked, absentDays
+├── leaveCards   id, name, available, booked, color, bg, icon
+├── absent       date, day, days
+├── agenda       upcoming[] and past[]  (each item has type: "holiday" or "leave")
+└── calendar     minYear, maxYear, fixed{ "dd-mm": name }, dated{ "dd-mm-yyyy": name }
+```
+
+Keep `calendar` as a **sibling** of `agenda`, not inside it. A misplaced block makes `mockData.calendar` undefined, and the calendar grid renders empty.
+
+When real data is connected, only this layer changes. The rendering code in `leaveSummary.js` and `calendarView.js` reads from the same shape.
+
+---
+
+## Deployment to Zoho Creator
+
+The widget is packed into a ZIP with ZET and uploaded to Zoho Creator as a **custom widget**, then placed on a Creator **Page**.
+
+### Step 1: Pre-deployment checklist
+
+- No unused files in `app/` (for example, the removed `applyLeave.js`).
+- `plugin-manifest.json` has `"service": "CREATOR"`:
+  ```json
+  {
+    "service": "CREATOR",
+    "cspDomains": { "connect-src": [] },
+    "config": []
+  }
+  ```
+- The code works locally with no red errors in the browser console (`F12`).
+- All changes are committed and pushed to Git.
+
+### Step 2: Validate and pack
+
+Run these from the project root, the folder that contains `plugin-manifest.json`:
+
+```bash
+zet validate
+zet pack
+```
+
+Expected output:
+
+```text
+Validation Rules passed successfully.
+Extension packed successfully as Leave Management System.zip in dist folder.
+```
+
+The ZIP is created at:
+
+```text
+dist/Leave Management System.zip
+```
+
+`zet pack` packages the `app` folder and the manifest. The `server`, `node_modules`, `cert.pem` and `key.pem` files are for local testing only and are not included.
+
+### Step 3: Create the widget in Zoho Creator
+
+1. Open your app in **Zoho Creator** and edit the target **Page** (**Pages > your page > Edit**).
+2. In the left menu of the page builder, click **Widgets**, then open the **Custom** tab. The **Installed** tab is for Marketplace extensions and is not used here.
+3. Click the blue **+** button at the bottom right.
+4. Fill in the **New Widget** form:
+
+   | Field | Value |
+   |---|---|
+   | Name | Leave Management System |
+   | Hosting | **Internal** (Creator hosts the uploaded files) |
+   | Widget File | `dist/Leave Management System.zip` |
+   | Index File | `/widget.html` |
+
+5. Click **Create**.
+
+> **Hosting:** *Internal* means Creator hosts your ZIP. *External* is only for a widget hosted on your own server and opened by URL.
+
+> **Index File:** if Creator reports "index file not found", open the ZIP. When `widget.html`, `css` and `js` sit at the top level, use `/widget.html`. If they sit inside a single `app` folder, use `/app/widget.html`.
+
+### Step 4: Add the widget to the page
+
+1. From the **Custom** tab, **drag** the widget into the **"Drag elements here"** area.
+2. Click the widget on the page, open its settings and make it **full width and tall** (for example 100% width and 800 px or more in height).
+3. Click **Done** in the top right.
+4. Open the page in **live mode** and test.
+
+### Step 5: Post-deployment test
+
+- The sticky bar stays fixed while scrolling.
+- The four leave cards, Absent list and Agenda panel show data.
+- The Upcoming/Past switch and All/Leaves/Holidays filters work.
+- The list/calendar toggle works, and the calendar navigates month by month between 2020 and 2030.
+- The "..." popup opens and closes (X, click outside and `Esc`).
+- The layout adapts on a narrow window or phone.
+
+---
+
+## Updating a Deployed Widget
+
+Creator does **not** update automatically when the code changes. Whenever you change the code:
+
+1. Test locally and fix any console errors.
+2. Run:
+   ```bash
+   zet validate
+   zet pack
+   ```
+3. In Creator, open the widget under **Widgets > Custom** and upload the **new ZIP**. If your account has no edit option, create a new widget and replace the old one on the page.
+4. Hard refresh the live page (`Ctrl + Shift + R`) to clear cached files.
+
+---
+
+## Troubleshooting
+
+| Problem | Likely cause and fix |
+|---|---|
+| `npm`/`zet` blocked in PowerShell | Run `Set-ExecutionPolicy -Scope CurrentUser -ExecutionPolicy RemoteSigned` |
+| `npm run server` / `npm index.js` fails | These scripts do not exist. Use `npm start` from the project root |
+| Page shows no cards or lists | A script error stopped `init()`. Check the console (`F12`) and the script order in `widget.html` |
+| Calendar grid is empty | `calendar` is nested inside `agenda` in `data.js`. Make it a sibling |
+| Holiday/agenda panel empty | `data.js` is missing the `agenda` block |
+| `applyLeave is not defined` | Leftover `applyLeave.init()` or `applyLeave.open()` calls. The form now comes from Creator, so remove them |
+| Dropdown or styles look old after deploy | Browser cache. Hard refresh with `Ctrl + Shift + R` |
+| "Index file not found" in Creator | Wrong index path. Try `/app/widget.html` or check the ZIP structure |
+| Widget appears blank in Creator | Open `F12 > Console`, read the red error. Usually a wrong file path or a script error |
+| Calls to external APIs are blocked | Add the domain to `cspDomains > connect-src` in `plugin-manifest.json`, then repack |
+
+---
+
+## Roadmap
+
+- [x] Project setup with ZET and local server
+- [x] My Data page with tabs, sticky summary bar and responsive layout
+- [x] Leave cards, Absent list, Agenda panel
+- [x] Calendar view and sync popup (UI)
+- [x] Pack and deploy as a Zoho Creator widget
+- [ ] Add the Zoho Creator JS SDK and replace `mockData` with Creator data
+- [ ] Apply Leave buttons opening the Creator form (pre-fill leave type or date)
+- [ ] Leave Requests tab
+- [ ] Compensatory Request tab
+- [ ] Calendar sync with Microsoft 365 and Google (needs OAuth)
+- [ ] Team and Holidays sections
+- [ ] Add `dist` to `.gitignore` if the ZIP should not be tracked
+
+---
+
+## Git Workflow
+
+```bash
+git add .
+git commit -m "Describe the change"
+git push
+```
+
+Suggested practice:
+
+- Commit before every `zet pack`, so the deployed ZIP always matches a commit.
+- Never commit `cert.pem`, `key.pem` or `node_modules`. Keep them in `.gitignore`.
+
+---
+
+## Author
+
+Developed by **Albenus Murmu** as part of the HRMS application on Zoho Creator.

@@ -11,5 +11,11 @@ tabs.forEach((tab) => {
   });
 });
 
-calendarView.init();
-leaveSummary.init();
+// start each module on its own, so one error can't stop the others
+[leaveSummary, calendarView, applyLeave].forEach((module) => {
+  try {
+    module.init();
+  } catch (err) {
+    console.error("Init failed:", err);
+  }
+});
